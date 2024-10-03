@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<!-- Page Title -->
+<div class="container mt-0">
+    <div class="row breadcrumb-bar">
+        <div class="col-md-6">
+            <h3 class="block-title">Patient Details</h3>
+        </div>
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'home' %}">
+                        <span class="ti-home"></span>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">Patients</li>
+                <li class="breadcrumb-item active">Search Patient</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<!-- /Page Title -->
+<!-- /Breadcrumb -->
+
+<!-- Search Form -->
+<div class="container mt-3">
+    <form method="get" action="{% url 'about_patient' %}">
+        <div class="form-group">
+            <input type="text" name="q" class="form-control" placeholder="Search by patient name" value="{{ request.GET.q }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+
+<!-- Main Content -->
+<div class="container mt-3">
+    <div class="row">
+        <!-- Widget Item -->
+        <div class="col-md-12">
+            <div class="widget-area-2 proclinic-box-shadow">
+                <h3 class="widget-title">Patient Details</h3>
+                <div class="table-responsive mb-3">
+                    <table id="tableId" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="no-sort">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" id="select-all">
+                                        <label class="custom-control-label" for="select-all"></label>
+                                    </div>
+                                </th>
+                                <th>Patient ID</th>
+                                <th>Patient Name</th>
+                                <th>Age</th>
+                                <th>Phone</th>
+                                <th>Last Visit</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in patients %}
+                                <tr>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input" type="checkbox" id="patient-{{ patient.id }}">
+                                            <label class="custom-control-label" for="patient-{{ patient.id }}"></label>
+                                        </div>
+                                    </td>
+                                    <td>{{ patient.id }}</td>
+                                    <td><a href="{% url 'patient_detail' patient.id %}">{{ patient.patient_Name }}</a></td>
+                                    <td>{{ patient.age }}</td>
+                                    <td>{{ patient.phone }}</td>
+                                    <td>{{ patient.last_visit }}</td>  <!-- Adjust this field according to your model -->
+                                    <td>{{ patient.status }}</td>  <!-- Adjust this field according to your model -->
+                                </tr>
+                            {% empty %}
+                            <tr><td colspan="7">No patients found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    <!-- Patient Visits Table -->
+                    <h3 class="widget-title mt-4">Patient Visits</h3>
+                    <div class="table-responsive mb-3">
+                        <table id="visitsTable" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Doctor</th>
+                                    <th>Problem</th>
+                                    <th>Payment Amount</th>
+                                    <th>Invoice</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for visit in visits %}
+                                    <tr>
+                                        <td>{{ visit.date }}</td>
+                                        <td>{{ visit.doctor_name }}</td>
+                                        <td>{{ visit.problem }}</td>
+                                        <td>{{ visit.payment_amount }}</td>
+                                        <td><a href="{{ visit.invoice_url }}" class="btn btn-info btn-sm">Download Invoice</a></td>
+                                    </tr>
+                                {% empty %}
+                                <tr><td colspan="5">No visits found.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+        <!-- /Widget Item -->
+    </div>
+</div>
+<!-- /Main Content -->
+
+{% endblock %}

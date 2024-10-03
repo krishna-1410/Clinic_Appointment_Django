@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-0">
+    <div class="row breadcrumb-bar">
+        <div class="col-md-6">
+            <h3 class="block-title">Add Payment</h3>
+        </div>
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="index.html">
+                        <span class="ti-home"></span>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">Payments</li>
+                <li class="breadcrumb-item active">Add Payment</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget-area-2 proclinic-box-shadow">
+                <h3 class="widget-title">Add Payment</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+
+                        <!-- Patient ID Dropdown -->
+                        <div class="form-group col-md-6">
+                            <label for="patient-id">Patient ID</label>
+                            <select class="form-control" id="patient-id" name="patient_id">
+                                <option value="">Select Patient ID</option>
+                                {% for patient in patients %}
+                                    <option value="{{ patient.id }}">{{ patient.id }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Appointment Dropdown -->
+                        <div class="form-group col-md-6">
+                            <label for="appointment">Appointment</label>
+                            <select class="form-control" id="appointment" name="appointment" required>
+                                <option value="">Select Appointment</option>
+                                {% for appointment in appointments %}
+                                    <!-- Use appointment.Token_Number as the value, but display appointment details -->
+                                    <option value="{{ appointment.Token_Number }}">
+                                        {{ appointment.Patient_ID }} - {{ appointment.Department }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Department Dropdown -->
+                        <div class="form-group col-md-6">
+                            <label for="department">Department</label>
+                            <select class="form-control" id="department" name="department">
+                                <option>Neuro</option>
+                                <option>Ortho</option>
+                                <option>General</option>
+                                <option>Derma</option>
+                                <option>Paediatrics</option>
+                                <option>Ophthalmology</option>
+                                <option>ENT</option>
+                            </select>
+                        </div>
+
+                        <!-- Doctor Name Dropdown -->
+                        <div class="form-group col-md-6">
+                            <label for="doctor-name">Doctor Name</label>
+                            <select class="form-control" id="doctor-name" name="doctor_name">
+                                <option value="">Select Doctor</option>
+                                {% for doctor in doctors %}
+                                    <option value="{{ doctor.id }}">{{ doctor.doctor_Name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Admission Date -->
+                        <div class="form-group col-md-6">
+                            <label for="admission-date">Admission Date</label>
+                            <input type="date" class="form-control" id="admission-date" name="admission_date">
+                        </div>
+
+                        <!-- Discharge Date -->
+                        <div class="form-group col-md-6">
+                            <label for="discharge-date">Discharge Date</label>
+                            <input type="date" class="form-control" id="discharge-date" name="discharge_date">
+                        </div>
+
+                        <!-- Services Section -->
+                        <div class="form-group col-md-12">
+                            <h4>Services</h4>
+                        </div>
+
+                        <!-- Services Container -->
+                        <div id="services-container" class="form-group col-md-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="service-name-0">Service Name</label>
+                                    <input type="text" placeholder="Service Name" class="form-control" id="service-name-0" name="service_name[]">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="treatment-cost-0">Cost of Treatment</label>
+                                    <input type="text" placeholder="Cost of Treatment" class="form-control" id="treatment-cost-0" name="treatment_cost[]">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Service Button -->
+                        <div class="form-group col-md-12">
+                            <button type="button" class="btn btn-outline-success" id="add-service-btn">
+                                <span class="ti-plus"></span> Add Service
+                            </button>
+                        </div>
+
+                        <!-- Payment Section -->
+                        <div class="form-group col-md-12">
+                            <h4>Payment</h4>
+                        </div>
+
+                        <!-- Discount -->
+                        <div class="form-group col-md-3">
+                            <label for="discount">Discount (%)</label>
+                            <input type="text" placeholder="Discount" class="form-control" id="discount" name="discount">
+                        </div>
+
+                        <!-- Total Payable Amount -->
+                        <div class="form-group col-md-3">
+                            <label for="total-payable">Total Payable Amount</label>
+                            <input type="text" placeholder="Total Payable Amount" class="form-control" id="total-payable" name="total_payable">
+                        </div>
+
+                        <!-- Payment Type -->
+                        <div class="form-group col-md-3">
+                            <label for="payment-type">Payment Type</label>
+                            <select class="form-control" id="payment-type" name="payment_type">
+                                <option>Check</option>
+                                <option>Card</option>
+                                <option>Cash</option>
+                            </select>
+                        </div>
+
+                        <!-- Card/Check No -->
+                        <div class="form-group col-md-3">
+                            <label for="card-check">Card/Check No</label>
+                            <input type="text" placeholder="Card/Check No" class="form-control" id="card-check" name="card_check">
+                        </div>
+
+                        <!-- Confirm Checkbox -->
+                        <div class="form-check col-md-12 mb-2">
+                            <div class="text-left">
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="ex-check-2">
+                                    <label class="custom-control-label" for="ex-check-2">Please Confirm</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-group col-md-6 mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/add_services.js' %}"></script>
+{% endblock %}

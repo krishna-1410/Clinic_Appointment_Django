@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Breadcrumb -->
+			<!-- Page Title -->
+			<div class="container mt-0">
+				<div class="row breadcrumb-bar">
+					<div class="col-md-6">
+						<h3 class="block-title">Quick Statistics</h3>
+					</div>
+					<div class="col-md-6">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item">
+								<a href="index.html">
+									<span class="ti-home"></span>
+								</a>
+							</li>
+							<li class="breadcrumb-item active">Dashboard</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+			<!-- /Page Title -->
+			<!-- /Breadcrumb -->
+			<!-- Main Content -->
+			<div class="container home">
+				<div class="row">
+					<!-- Patients Widget -->
+    				<!-- Widget Item for Patients -->
+					<div class="col-md-4">
+						<div class="widget-area proclinic-box-shadow color-red">
+							<div class="widget-left">
+								<span class="ti-user"></span>
+							</div>
+							<div class="widget-right">
+								<h4 class="wiget-title">Patients</h4>
+								<span class="numeric color-red">{{ total_patients }}</span>  <!-- Dynamic patients count -->
+								<p class="inc-dec mb-0">
+									{% if patient_growth >= 0 %}
+										<span class="ti-angle-up"></span> {{ patient_growth|floatformat:2 }}% Increased
+									{% else %}
+										<span class="ti-angle-down"></span> {{ patient_growth|floatformat:2 }}% Decreased
+									{% endif %}
+								</p>
+							</div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+			
+					<!-- Widget Item for Appointments -->
+					<div class="col-md-4">
+						<div class="widget-area proclinic-box-shadow color-green">
+							<div class="widget-left">
+								<span class="ti-bar-chart"></span>
+							</div>
+							<div class="widget-right">
+								<h4 class="wiget-title">Appointments</h4>
+								<span class="numeric color-green">{{ total_appointments }}</span>  <!-- Dynamic appointments count -->
+								<p class="inc-dec mb-0">
+									{% if appointment_growth >= 0 %}
+										<span class="ti-angle-up"></span> {{ appointment_growth|floatformat:2 }}% Increased
+									{% else %}
+										<span class="ti-angle-down"></span> {{ appointment_growth|floatformat:2 }}% Decreased
+									{% endif %}
+								</p>
+							</div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+			
+					<!-- Widget Item for Total Revenue -->
+					<div class="col-md-4">
+						<div class="widget-area proclinic-box-shadow color-yellow">
+							<div class="widget-left">
+								<span class="ti-money"></span>
+							</div>
+							<div class="widget-right">
+								<h4 class="wiget-title">Total Revenue</h4>
+								<span class="numeric color-yellow">₹{{ total_revenue }}</span>  <!-- Dynamic total revenue -->
+								<p class="inc-dec mb-0">
+									{% if revenue_growth >= 0 %}
+										<span class="ti-angle-up"></span> {{ revenue_growth|floatformat:2 }}% Increased
+									{% else %}
+										<span class="ti-angle-down"></span> {{ revenue_growth|floatformat:2 }}% Decreased
+									{% endif %}
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- /Widget Item -->
+				</div>
+
+				<div class="row">
+					<!-- Widget Item -->
+					<div class="col-md-6">
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title">Appointments Year by Year</h3>
+							<div id="lineMorris" class="chart-home"></div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+					<!-- Widget Item -->
+					<div class="col-md-6">
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title"> Patients Year by Year</h3>
+							<div id="barMorris" class="chart-home"></div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+				</div>
+
+				<div class="row">
+					<!-- Widget Item -->
+					<div class="col-md-12">
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title">Appointments</h3>
+							<div class="table-responsive">
+								<table class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Patient Name</th>
+											<th>Doctor</th>
+											<th>Check-Up</th>
+											<th>Date</th>
+											<th>Time</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for appointment in all_appointments %}
+										<tr>
+											<td>{{ appointment.Patient_ID.patient_Name }}</td>  <!-- Adjust based on your model -->
+											<td>{{ appointment.Doctor_name }}</td>
+											<td>{{ appointment.Department }}</td>  <!-- Adjust as needed -->
+											<td>{{ appointment.Appointment_date }}</td>
+											<td>{{ appointment.Time_slot }}</td>
+											<td>
+												{% if appointment.status == 'Completed' %}
+													<span class="badge badge-success">Completed</span>
+												{% elif appointment.status == 'Pending' %}
+													<span class="badge badge-warning">Pending</span>
+												{% else %}
+													<span class="badge badge-danger">Cancelled</span>
+												{% endif %}
+											</td>
+										</tr>
+										{% empty %}
+										<tr>
+											<td colspan="6" class="text-center">No appointments found.</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+				</div>
+				
+
+				<div class="row">
+					<!-- Widget Item for Appointments Status -->
+					<div class="col-sm-6">  <!-- Match this column size -->
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title">Appointments Status</h3>
+							<div id="donutMorris" class="chart-home"></div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+				
+					<!-- Widget Item for Doctors Availability -->
+					<div class="col-sm-6">  <!-- Use col-sm-6 to match -->
+						<div class="widget-area-2 progress-status proclinic-box-shadow">
+							<h3 class="widget-title">Doctors Availability</h3>
+							<div class="table-responsive">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th style="width: 40%;">Doctor</th>
+											<th style="width: 40%;">Speciality</th>
+											<th style="width: 20%;">Availability</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for doctor in all_doctors %}
+										<tr>
+											<td>{{ doctor.doctor_Name }}</td>
+											<td>{{ doctor.speciality }}</td>
+											<td>
+												{% if doctor.availability == 'Available' %}
+													<span class="badge badge-success">Available</span>
+												{% elif doctor.availability == 'On Leave' %}
+													<span class="badge badge-warning">On Leave</span>
+												{% else %}
+													<span class="badge badge-danger">Not Available</span>
+												{% endif %}
+											</td>
+										</tr>
+										{% empty %}
+										<tr>
+											<td colspan="3" class="text-center">No doctors available.</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- /Widget Item -->
+				</div>				
+
+			</div>
+			<!-- /Main Content -->
+
+{%  endblock %}

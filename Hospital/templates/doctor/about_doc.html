@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<!-- Breadcrumb -->
+<!-- Page Title -->
+<div class="container mt-0">
+    <div class="row breadcrumb-bar">
+        <div class="col-md-6">
+            <h3 class="block-title">Doctor Details</h3>
+        </div>
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'home' %}">
+                        <span class="ti-home"></span>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">Doctors</li>
+                <li class="breadcrumb-item active">Search Doctor</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<!-- /Page Title -->
+<!-- /Breadcrumb -->
+
+<!-- Search Form -->
+<div class="container mt-3">
+    <form method="get" action="{% url 'about_doctor' %}">
+        <div class="form-group">
+            <input type="text" name="q" class="form-control" placeholder="Search by doctor name" value="{{ request.GET.q }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+
+<!-- Main Content -->
+<div class="container mt-3">
+    <div class="row">
+        <!-- Doctor Details -->
+        {% if doctors %}
+            {% for doctor in doctors %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img class="card-img-top" src="{% static 'images/doc.jpg' %}" alt="Doctor Image">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ doctor.doctor_name }}</h4>
+                            <p class="card-text">{{ doctor.specialization }}</p>
+                            <button type="button" class="btn btn-success mb-2"><span class="ti-pencil-alt"></span> Edit Doctor</button>
+                            <button type="button" class="btn btn-danger"><span class="ti-trash"></span> Delete Doctor</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Specialization</strong></td>
+                                    <td>{{ doctor.specialization }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Experience</strong></td>
+                                    <td>{{ doctor.experience }} Years</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Gender</strong></td>
+                                    <td>{{ doctor.gender }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Address</strong></td>
+                                    <td>{{ doctor.address }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Phone</strong> </td>
+                                    <td>{{ doctor.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date Of Birth</strong> </td>
+                                    <td>{{ doctor.dob }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email</strong></td>
+                                    <td>{{ doctor.email }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-md-12">
+                <p>No doctors found.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Doctor Activity Table -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget-area-2 proclinic-box-shadow">
+                <h3 class="widget-title">Doctor Activity</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Patient Name</th>
+                                <th>Injury/Condition</th>
+                                <th>Visit Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if visits %}
+                                {% for visit in visits %}
+                                    <tr>
+                                        <td>{{ visit.patient_name }}</td>
+                                        <td>{{ visit.problem }}</td>
+                                        <td>{{ visit.visit_date }}</td>
+                                        <td>{{ visit.status }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr><td colspan="4">No visits found.</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Main Content -->
+
+{% endblock %}
